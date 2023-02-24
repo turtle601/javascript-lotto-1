@@ -45,5 +45,6 @@
     "presets": [
       "@babel/preset-env"
     ]
-  }
+  },
+  "homepage": "https://turtle601.github.io/javascript-lotto-1/"
 }
