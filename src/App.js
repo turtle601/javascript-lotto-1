@@ -3,20 +3,28 @@ import LottoMachine from './domain/LottoMachine';
 import WinningNumbers from './domain/WinningNumbers';
 import BonusNumber from './domain/BonusNumber';
 import CorrectLotto from './domain/CorrectLotto';
+import LottoStatistics from './domain/LottoStatistics';
 
 // component
 import LottoMoneyInput from './components/LottoMoneyInput';
 import LottoPurchaseList from './components/LottoPurchaseList';
 import LottoCorrectInput from './components/LottoCorrectInput';
-import LottoStatistics from './domain/LottoStatistics';
 import LottoStatisticsModal from './components/LottoStatisticsModal';
 
+// store
+import store from './components/core/Store';
+
+// core
+import MyReact from './components/core/MyReact';
+
+// css
 import '../css/reset.css';
 import '../css/spacing.css';
 import '../css/typograpy.css';
 import '../css/styles.css';
 import '../css/flexbox.css';
 
+// utils
 import { getDom } from './utils/dom';
 
 function App($target) {
@@ -25,20 +33,15 @@ function App($target) {
   this.lottoMachine = new LottoMachine();
   this.correctLotto = new CorrectLotto();
 
-  this.state = {
-    buyLottos: [],
-    winningRanks: [],
-    profitRate: 0,
-    isModal: false,
-  };
+  MyReact.call(this);
 
   this.template = () => `
-    <header class="flex flex--v-Center lotto-header">
+    <header class="flex flex--v-Center lotto-header w-100">
         <h1 class="lotto-subtitle mgLeft_10_rem">🎱 행운의 로또</h1>
     </header>
     <section class="flex flex--center w-100 mgBottom_5_rem">
       <div class="lotto-card mgTop_5_rem pd_1_rem">
-        <h2 class="flex flex--h-center lotto-card__title lotto-subtitle mgTop_3_rem">
+        <h2 class="flex flex--h-center lotto-card__title lotto-subtitle mgTop_3_rem w-100">
             🎱 내 번호 당첨 확인 🎱
         </h2>
         <div class="lotto-money"></div>
@@ -47,7 +50,7 @@ function App($target) {
         <div class="lotto-statistics-modal"></div>
       </div>
     </section>
-    <footer class="flex flex--center lotto-caption">
+    <footer class="flex flex--center lotto-caption w-100">
       <p>Copyright 2023. woowacourse</p>
     </footer>
   `;
@@ -60,20 +63,15 @@ function App($target) {
 
     new LottoPurchaseList({
       $target: getDom('.lotto-tickets'),
-      lottos: this.state.buyLottos,
     });
 
     new LottoCorrectInput({
       $target: getDom('.correct-lotto--input'),
-      lottos: this.state.buyLottos,
       inputCorrectLottoEvent: this.inputCorrectLottoEvent,
     });
 
     new LottoStatisticsModal({
       $target: getDom('.lotto-statistics-modal'),
-      winningRanks: this.state.winningRanks,
-      profitRate: this.state.profitRate,
-      isModal: this.state.isModal,
       restart: this.restart,
     });
   };
@@ -91,7 +89,7 @@ function App($target) {
   this.inputLottoMoneyEvent = (money) => {
     try {
       this.lottoMachine.purchase(money);
-      this.setState({ buyLottos: this.lottoMachine.lottos });
+      store.setState({ buyLottos: this.lottoMachine.lottos });
     } catch (error) {
       alert(error.message);
     }
@@ -116,7 +114,7 @@ function App($target) {
     const winningRanks = statics.getAllLottosRank(lottos);
     const profitRate = statics.getProfitRate(winningRanks, price);
 
-    this.setState({
+    store.setState({
       winningRanks: winningRanks.reverse(),
       profitRate,
       isModal: true,
@@ -124,7 +122,7 @@ function App($target) {
   };
 
   this.restart = () => {
-    this.setState({
+    store.setState({
       buyLottos: [],
       winningRanks: [],
       profitRate: 0,
@@ -133,7 +131,7 @@ function App($target) {
   };
 
   // 실행
-  this.render();
+  this.setup();
 }
 
 export default App;

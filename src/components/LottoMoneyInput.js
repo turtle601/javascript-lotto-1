@@ -1,7 +1,10 @@
 import { getDom } from '../utils/dom';
+import MyReact from './core/MyReact';
 
 function LottoMoneyInput({ $target, inputMoneyEvent }) {
   this.$target = $target;
+
+  MyReact.call(this);
 
   this.template = () => `
     <form class="mgTop_2_rem">
@@ -10,9 +13,11 @@ function LottoMoneyInput({ $target, inputMoneyEvent }) {
       </label>
       <div class="flex flex--space-between mgTop_1_rem">
         <input
-          class="lotto-card__money--input lotto-placeholder"
+          type="number" 
+          class="lotto-card__money--input w-100 lotto-placeholder"
           placeholder="금액"
           value=""
+          id="lottoPrice"
         />
         <button class="button">구입</button>
       </div>
@@ -33,8 +38,7 @@ function LottoMoneyInput({ $target, inputMoneyEvent }) {
     });
   };
 
-  this.render();
-  this.setEvent();
+  this.setup();
 }
 
 export default LottoMoneyInput;

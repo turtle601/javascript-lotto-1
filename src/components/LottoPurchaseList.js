@@ -1,12 +1,17 @@
-function LottoPurchaseList({ $target, lottos }) {
+import MyReact from './core/MyReact';
+import store from './core/Store';
+
+function LottoPurchaseList({ $target }) {
   this.$target = $target;
-  this.lottos = lottos;
+
+  MyReact.call(this);
 
   this.template = () => {
-    const lottoCountHtml = `<li class="lotto-count">총 ${this.lottos.length}개를 구입하였습니다.</li>`;
-    const lottoPurchaseHtml = this.lottos
+    const lottoCountHtml = `<p class="lotto-count space-y-3">총 ${store.state.buyLottos.length}개를 구입하였습니다.</p>`;
+    const lottoPurchaseHtml = store.state.buyLottos
       .map(
-        (lotto) => `<li class="lotto-ticket">${lotto.numbers.join(',')}</li>`
+        (lotto) =>
+          `<li class="lotto-ticket space-y-3">${lotto.numbers.join(',')}</li>`
       )
       .join('');
 
@@ -17,7 +22,7 @@ function LottoPurchaseList({ $target, lottos }) {
     this.$target.innerHTML = this.template();
   };
 
-  this.render();
+  this.setup();
 }
 
 export default LottoPurchaseList;

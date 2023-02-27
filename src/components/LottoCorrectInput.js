@@ -1,12 +1,16 @@
 import { getDom, getDomAll } from '../utils/dom';
+import MyReact from './core/MyReact';
+import store from './core/Store';
 
-const isLoading = (lottos) => lottos.length === 0;
+const isLoading = () => store.state.buyLottos.length === 0;
 
-function LottoCorrectInput({ $target, lottos, inputCorrectLottoEvent }) {
+function LottoCorrectInput({ $target, inputCorrectLottoEvent }) {
   this.$target = $target;
 
+  MyReact.call(this);
+
   this.makeCorrectInputHTML = () => `
-    <form class="mgTop_2_rem">
+    <form class="mgTop_2_rem lotto-body">
       <p>지난 주 당첨번호 6개와 보너스 번호 1개를 입력해주세요.</p>
       <div class="flex flex--space-between mgTop_1_rem">
         <label for="winningNumbers">당첨 번호</label>
@@ -14,22 +18,20 @@ function LottoCorrectInput({ $target, lottos, inputCorrectLottoEvent }) {
       </div>
 
       <div class="flex mgTop_1_rem">
-        <input class="lotto-card__lotto--input winningNumbers" value="" />
-        <input class="lotto-card__lotto--input winningNumbers" value="" />
-        <input class="lotto-card__lotto--input winningNumbers" value="" />
-        <input class="lotto-card__lotto--input winningNumbers" value="" />
-        <input class="lotto-card__lotto--input winningNumbers" value="" />
-        <input class="lotto-card__lotto--input winningNumbers" value="" />
-        <input class="lotto-card__lotto--input bonusNumber" value="" />
+        <input type="number" class="lotto-card__lotto--input space-x-1" id="winningNumbers" value="" />
+        <input type="number" class="lotto-card__lotto--input space-x-1" id="winningNumbers" value="" />
+        <input type="number" class="lotto-card__lotto--input space-x-1" id="winningNumbers" value="" />
+        <input type="number" class="lotto-card__lotto--input space-x-1" id="winningNumbers" value="" />
+        <input type="number" class="lotto-card__lotto--input space-x-1" id="winningNumbers" value="" />
+        <input type="number" class="lotto-card__lotto--input space-x-1" id="winningNumbers" value="" />
+        <input type="number" class="lotto-card__lotto--input ml-auto" id="bonusNumber" value="" />
       </div>
 
-      <button class="button w-100 mgTop_1_rem" type="button">
-        결과 확인하기
-      </button>
+      <button class="button w-100 mgTop_1_rem">결과 확인하기</button>
     </form>
   `;
 
-  this.template = () => (isLoading(lottos) ? '' : this.makeCorrectInputHTML());
+  this.template = () => (isLoading() ? '' : this.makeCorrectInputHTML());
 
   this.render = () => {
     this.$target.innerHTML = this.template();
@@ -40,17 +42,16 @@ function LottoCorrectInput({ $target, lottos, inputCorrectLottoEvent }) {
       e.preventDefault();
 
       if (e.target.tagName === 'BUTTON') {
-        const winningNumbers = [...getDomAll('.winningNumbers')]
+        const winningNumbers = [...getDomAll('#winningNumbers')]
           .map((winningNumber) => winningNumber.value)
           .join(',');
 
-        inputCorrectLottoEvent(winningNumbers, getDom('.bonusNumber').value);
+        inputCorrectLottoEvent(winningNumbers, getDom('#bonusNumber').value);
       }
     });
   };
 
-  this.render();
-  this.setEvent();
+  this.setup();
 }
 
 export default LottoCorrectInput;
